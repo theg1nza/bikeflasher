@@ -10,6 +10,7 @@
 
 const int rightButton = 9;
 const int leftButton = 8;
+const int midButton = 7;
 
 LedControl lc = LedControl (12,11,10,1);
 
@@ -24,8 +25,11 @@ void setup() {
   lc.setIntensity(0, 8);
   lc.clearDisplay(0);
 
+  Serial.begin(9600);
+
   pinMode(rightButton, INPUT);
   pinMode(leftButton, INPUT);
+  pinMode(midButton, INPUT);
 }
 
 void rightArrow() {
@@ -77,6 +81,8 @@ void brake() {
   lc.setRow(0,5,brake[5]);
   lc.setRow(0,6,brake[6]);
   lc.setRow(0,7,brake[7]);
+  delay(100);
+  
 }
 
 void loop() {
@@ -85,6 +91,12 @@ void loop() {
 
   if (rightButtonState == HIGH) {
     brake();
+    Serial.println("right button");
+  } else if (leftButtonState == HIGH) {
+    brake();
+    Serial.println("left button");
+  } else {
+    lc.clearDisplay(0);
   }
   
   //rightArrow();
