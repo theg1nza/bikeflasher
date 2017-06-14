@@ -8,34 +8,29 @@
   const int CS = 11;
   const int CLK = 10; */
 
-const int rightButton = 9;
-const int leftButton = 8;
-const int midButton = 7;
+const int leftButton = 7;
+const int rightButton = 6;
+const int rightLed = 5;
+const int leftLed = 4;
 
 LedControl lc = LedControl (12,11,10,1);
 
-//Delay time between updates (mandatory)
-unsigned long delaytime = 100;
-
-int rightButtonState = 0;
 int leftButtonState = 0;
+int rightButtonState = 0;
 
 void setup() {
   lc.shutdown(0, false);
-  lc.setIntensity(0, 8);
+  lc.setIntensity(0, 10);
   lc.clearDisplay(0);
-
-  Serial.begin(9600);
 
   pinMode(rightButton, INPUT);
   pinMode(leftButton, INPUT);
-  pinMode(midButton, INPUT);
+  pinMode(rightLed, INPUT);
+  pinMode(leftLed, INPUT);
 }
 
 void rightArrow() {
   byte right[8]  = {0x38,0x1c,0xe,0xff,0xff,0xe,0x1c,0x38};
-
-  lc.setIntensity(0, 10);
   
   lc.setRow(0,0,right[0]);
   lc.setRow(0,1,right[1]);
@@ -52,8 +47,6 @@ void rightArrow() {
 
 void leftArrow() {
   byte left[8]  = {0x1c,0x38,0x70,0xff,0xff,0x70,0x38,0x1c};
-
-  lc.setIntensity(0, 10);
   
   lc.setRow(0,0,left[0]);
   lc.setRow(0,1,left[1]);
@@ -68,37 +61,15 @@ void leftArrow() {
   delay(600);
 }
 
-void brake() {  
-  byte brake[8] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
-  
-  lc.setIntensity(0, 1);
-
-  lc.setRow(0,0,brake[0]);
-  lc.setRow(0,1,brake[1]);
-  lc.setRow(0,2,brake[2]);
-  lc.setRow(0,3,brake[3]);
-  lc.setRow(0,4,brake[4]);
-  lc.setRow(0,5,brake[5]);
-  lc.setRow(0,6,brake[6]);
-  lc.setRow(0,7,brake[7]);
-  delay(100);
-  
-}
-
 void loop() {
-  rightButtonState = digitalRead(rightButton);
-  leftButtonState = digitalRead(leftButton);
-
-  if (rightButtonState == HIGH) {
-    brake();
-    Serial.println("right button");
-  } else if (leftButtonState == HIGH) {
-    brake();
-    Serial.println("left button");
+  rightButtonState = digitalRead(leftButton);
+  leftButtonState = digitalRead(rightButton);
+  
+  if (leftButtonState == HIGH){
+    leftArrow();
+  } else if (rightButtonState == HIGH){
+    rightArrow();
   } else {
     lc.clearDisplay(0);
   }
-  
-  //rightArrow();
-  //leftArrow();
 }
